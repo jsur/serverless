@@ -1,0 +1,23 @@
+{
+  "name": "serverless-course",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsur/serverless.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jsur/serverless/issues"
+  },
+  "homepage": "https://github.com/jsur/serverless#readme",
+  "devDependencies": {
+    "aws-sdk": "^2.1075.0",
+    "serverless-pseudo-parameters": "^2.6.1"
+  }
+}
