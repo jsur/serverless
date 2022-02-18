@@ -26,7 +26,7 @@ elif [ "$1" = "deploy" ] && [ $# -eq 2 ]; then
   STAGE=$2
 
   npm ci
-  'node_modules/.bin/sls' deploy -s $STAGE
+  'node_modules/.bin/sls' deploy -s $STAGE --verbose
 else
   instruction
   exit 1
