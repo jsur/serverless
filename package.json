@@ -24,6 +24,7 @@
     "co": "^4.6.0",
     "lodash": "^4.17.21",
     "mocha": "^9.2.0",
+    "serverless": "^3.2.1",
     "serverless-pseudo-parameters": "^2.6.1"
   },
   "dependencies": {
