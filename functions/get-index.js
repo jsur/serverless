@@ -23,6 +23,8 @@ const days = [
 
 var html; // lambda reuses cached global vars
 
+// return html just to demonstrate that lambdas can return other formats than json
+// e.g. protocol buffers
 function loadHtml() {
   if (!html) {
     html = fs.readFile("static/index.html", "utf-8");
@@ -36,12 +38,18 @@ async function getRestaurants() {
     host: url.hostname,
     path: url.pathname,
   });
-  const { body } = await http
+
+  const httpReq = http
     .get(restaurantsApiRoot)
     .set("Host", opts.headers["Host"])
     .set("X-Amz-Date", opts.headers["X-Amz-Date"])
-    .set("Authorization", opts.headers["Authorization"])
-    .set("X-Amz-Security-Token", opts.headers["X-Amz-Security-Token"]);
+    .set("Authorization", opts.headers["Authorization"]);
+
+  if (opts.headers["X-Amz-Security-Token"]) {
+    httpReq.set("X-Amz-Security-Token", opts.headers["X-Amz-Security-Token"]);
+  }
+
+  const { body } = await httpReq;
   return body;
 }
 
