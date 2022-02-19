@@ -5,6 +5,7 @@ const mustache = require("mustache");
 const http = require("superagent");
 const aws4 = require("aws4");
 const URL = require("url");
+const log = require("../lib/log");
 
 const restaurantsApiRoot = process.env.restaurants_api;
 const ordersApiRoot = process.env.orders_api;
@@ -56,7 +57,9 @@ async function getRestaurants() {
 
 module.exports.handler = async (event) => {
   const page = await loadHtml();
+  log.debug("Loaded html template");
   const restaurants = await getRestaurants();
+  log.debug("Loaded restaurants");
   const dayOfWeek = days[new Date().getDay()];
   const view = {
     restaurants,
@@ -68,6 +71,7 @@ module.exports.handler = async (event) => {
     placeOrderUrl: `${ordersApiRoot}/`,
   };
   const rendered = mustache.render(page, view);
+  log.debug(`Generated html [${rendered.length} bytes]`);
 
   return {
     statusCode: 200,

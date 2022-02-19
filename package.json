@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "handler.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "test:integration": "mocha tests/test_cases --reporter spec"
   },
@@ -22,6 +25,8 @@
     "chai": "^4.3.6",
     "cheerio": "^1.0.0-rc.10",
     "co": "^4.6.0",
+    "eslint": "^8.9.0",
+    "eslint-plugin-node": "^11.1.0",
     "lodash": "^4.17.21",
     "mocha": "^9.2.0",
     "serverless": "^3.2.1",
@@ -31,6 +36,7 @@
     "aws4": "^1.11.0",
     "chance": "^1.1.8",
     "mustache": "^4.2.0",
+    "serverless-iam-roles-per-function": "^3.2.0",
     "superagent": "^7.1.1"
   }
 }

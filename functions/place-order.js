@@ -10,7 +10,7 @@ module.exports.handler = async function (event, context) {
   const { restaurantName } = JSON.parse(event.body);
   const userEmail = event.requestContext.authorizer.claims.email;
   const orderId = chance.guid();
-  console.log(
+  log.debug(
     `placing order id ${orderId} to ${restaurantName} from user ${userEmail}`
   );
 
@@ -29,7 +29,7 @@ module.exports.handler = async function (event, context) {
 
   await kinesis.putRecord(putReq).promise();
 
-  console.log(`published ${eventType} event to Kinesis`);
+  log.debug(`published ${eventType} event to Kinesis`);
 
   return {
     statusCode: 200,
