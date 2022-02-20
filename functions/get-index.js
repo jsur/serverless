@@ -4,8 +4,11 @@ const fs = require("fs").promises;
 const mustache = require("mustache");
 const http = require("superagent");
 const aws4 = require("aws4");
+const middy = require("middy");
 const URL = require("url");
 const log = require("../lib/log");
+const sampleLogging = require("../middleware/sample-logging");
+const cloudwatch = require("../lib/cloudwatch");
 
 const restaurantsApiRoot = process.env.restaurants_api;
 const ordersApiRoot = process.env.orders_api;
@@ -55,10 +58,13 @@ async function getRestaurants() {
   return body;
 }
 
-module.exports.handler = async (event) => {
+const handler = async (event) => {
   const page = await loadHtml();
   log.debug("Loaded html template");
-  const restaurants = await getRestaurants();
+  const restaurants = await cloudwatch.trackExecTime(
+    "GetRestaurantsLatency",
+    () => getRestaurants()
+  );
   log.debug("Loaded restaurants");
   const dayOfWeek = days[new Date().getDay()];
   const view = {
@@ -73,6 +79,8 @@ module.exports.handler = async (event) => {
   const rendered = mustache.render(page, view);
   log.debug(`Generated html [${rendered.length} bytes]`);
 
+  cloudwatch.incrCount("RestaurantsReturned", restaurants.length);
+
   return {
     statusCode: 200,
     body: rendered,
@@ -81,3 +89,7 @@ module.exports.handler = async (event) => {
     },
   };
 };
+
+module.exports.handler = middy(handler).use(
+  sampleLogging({ sampleRate: 0.01 }) // debug log samples logged 1/100 invocations
+);

@@ -3,6 +3,7 @@
 const AWS = require("aws-sdk");
 const chance = require("chance").Chance();
 const kinesis = new AWS.Kinesis();
+const log = require("../lib/log");
 const streamName = process.env.order_events_stream;
 const eventType = "order_placed";
 
