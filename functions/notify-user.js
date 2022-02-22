@@ -1,7 +1,8 @@
 "use strict";
 
 const getRecords = require("../lib/kinesis").getRecords;
-const AWS = require("aws-sdk");
+const xray = require("aws-xray-sdk");
+const AWS = xray.captureAWS(require("aws-sdk"));
 const kinesis = new AWS.Kinesis();
 const sns = new AWS.SNS();
 const streamName = process.env.order_events_stream;

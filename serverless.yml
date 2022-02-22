@@ -5,6 +5,7 @@ frameworkVersion: "3"
 plugins:
   - serverless-pseudo-parameters
   - serverless-iam-roles-per-function
+  - serverless-plugin-tracing
 
 custom:
   stage: ${opt:stage, "dev"}
@@ -17,11 +18,18 @@ custom:
 provider:
   name: aws
   runtime: nodejs14.x
+  tracing: true
   environment:
+    STAGE: ${self:custom.stage}
     log_level: ${self:custom:logLevel.${self:custom.stage}, self:custom.logLevel.default}
   iamRoleStatements:
     - Effect: Allow
       Action: cloudwatch:PutMetricData
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - xray:PutTraceSegments
+        - xray:PutTelemetryRecords
       Resource: "*"
 
 functions:
@@ -171,6 +179,7 @@ functions:
         Resource: arn:aws:kinesis:#{AWS::Region}:#{AWS::AccountId}:stream/order-events
 
   auto-create-api-alarms:
+    tracing: false
     handler: functions/create-alarms.handler
     events:
       - cloudwatchEvent:

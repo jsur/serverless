@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/jsur/serverless#readme",
   "devDependencies": {
-    "aws-sdk": "^2.1075.0",
+    "aws-sdk": "^2.7.15",
     "awscred": "^1.5.0",
     "chai": "^4.3.6",
     "cheerio": "^1.0.0-rc.10",
@@ -31,6 +31,7 @@
     "serverless-pseudo-parameters": "^2.6.1"
   },
   "dependencies": {
+    "aws-xray-sdk": "^3.3.4",
     "aws4": "^1.11.0",
     "chance": "^1.1.8",
     "co": "^4.6.0",
@@ -38,6 +39,8 @@
     "middy": "^0.36.0",
     "mustache": "^4.2.0",
     "serverless-iam-roles-per-function": "^3.2.0",
-    "superagent": "^7.1.1"
+    "serverless-plugin-tracing": "^2.0.0",
+    "superagent": "^7.1.1",
+    "superagent-promise": "^1.1.0"
   }
 }

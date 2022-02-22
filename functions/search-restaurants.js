@@ -1,6 +1,7 @@
 "use strict";
 
-const AWS = require("aws-sdk");
+const xray = require("aws-xray-sdk");
+const AWS = xray.captureAWS(require("aws-sdk"));
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 const { defaultResults, restaurants_table } = process.env;

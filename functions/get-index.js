@@ -2,12 +2,13 @@
 
 const fs = require("fs").promises;
 const mustache = require("mustache");
-const http = require("superagent");
 const aws4 = require("aws4");
 const middy = require("middy");
 const URL = require("url");
+const http = require("../lib/http");
 const log = require("../lib/log");
 const sampleLogging = require("../middleware/sample-logging");
+const correlationIds = require("../middleware/capture-correlation-ids");
 const cloudwatch = require("../lib/cloudwatch");
 
 const restaurantsApiRoot = process.env.restaurants_api;
@@ -44,11 +45,11 @@ async function getRestaurants() {
     path: url.pathname,
   });
 
-  const httpReq = http
-    .get(restaurantsApiRoot)
-    .set("Host", opts.headers["Host"])
-    .set("X-Amz-Date", opts.headers["X-Amz-Date"])
-    .set("Authorization", opts.headers["Authorization"]);
+  const httpReq = http({
+    uri: restaurantsApiRoot,
+    method: "get",
+    headers: opts.headers,
+  });
 
   if (opts.headers["X-Amz-Security-Token"]) {
     httpReq.set("X-Amz-Security-Token", opts.headers["X-Amz-Security-Token"]);
@@ -90,6 +91,8 @@ const handler = async (event) => {
   };
 };
 
-module.exports.handler = middy(handler).use(
-  sampleLogging({ sampleRate: 0.01 }) // debug log samples logged 1/100 invocations
-);
+module.exports.handler = middy(handler)
+  .use(correlationIds({ sampleDebugLogRate: 0.01 }))
+  .use(
+    sampleLogging({ sampleRate: 0.01 }) // debug log samples logged 1/100 invocations
+  );
